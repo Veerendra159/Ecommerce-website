@@ -14,7 +14,7 @@ app.use(express.json())
 
 
 app.use("/auth", authRoutes)
-app.use("/api", productsRoute)
+app.use("/api/product", productsRoute)
 
 
 const PORT = process.env.PORT || 5000
