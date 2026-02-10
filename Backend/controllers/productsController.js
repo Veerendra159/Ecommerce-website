@@ -16,7 +16,7 @@ export const add_products = async (req, res) => {
             price,
             description,
             countInStock,
-            createBy: adminID
+            createdBy: adminID
         })
         return res.status(201).json({
             post,
@@ -70,10 +70,11 @@ export const get_products = async (req, res) => {
 
 // update products details by admin
 export const updateProducts_details = async (req, res) => {
-    const { names } = req.params
-    console.log(names)
+    const productId = req.params.id
+    console.log("Product ID:", productId);
 
     const adminID = req.user._id;
+    console.log("Admin from token:", adminID);
     const { name, price, description, countInStock } = req.body;
     const updating = {
         name,
@@ -81,10 +82,11 @@ export const updateProducts_details = async (req, res) => {
         description,
         countInStock
     }
-    console.log(updating)
-    const update = await products_model.findOneAndUpdate({ createdBy: adminID, name: names }, updating, { new: true })
+
+    const product = await products_model.findById(productId);
+    console.log("Product in DB:", product);
     res.json({
-        update,
+        product,
         message: "products details are updated"
     })
 }

@@ -9,6 +9,6 @@ const router = express.Router();
 router.post("/product/add", protect, admin_protect, /*upload.array("image", 5), */add_products)
 router.get("/product/:name", protect ,admin_protect, )
 router.get("/product/:name", protect, admin_protect, get_admin_products)
-router.patch("/product/:names", protect, admin_protect, updateProducts_details)
+router.patch("/product/:id", protect, admin_protect, updateProducts_details)
 
 export default router;
