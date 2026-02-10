@@ -57,7 +57,7 @@ export const login_protect = async (req, res) => {
 // patch method for register user
 export const update_details = async (req, res) => {
     try {
-        const userId = req.user._id
+        const userId = req.user._id;
         const { Name, Age, Email, Password, Phone } = req.body;
         const updateData = { Name, Age, Email, Phone }
         if (Password) {

@@ -19,6 +19,11 @@ const products_schema = new mongoose.Schema({
     countInStock: {
         type: Number,
         require: true
+    },
+    createdBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",   // admin
+        require: true
     }
 })
 
