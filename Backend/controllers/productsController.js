@@ -1,7 +1,7 @@
 import { products_model } from "../models/products.js";
 
 
-//  post products || add products
+//  post products || add products by admin only
 export const add_products = async (req, res) => {
     try {
         const adminID = req.user._id;
@@ -31,6 +31,7 @@ export const add_products = async (req, res) => {
 
 }
 
+//  get all products for admin only
 export const get_admin_products = async (req, res) => {
     try {
         const adminID = req.user._id;
@@ -49,6 +50,7 @@ export const get_admin_products = async (req, res) => {
         })
     }
 }
+
 // get products
 export const get_products = async (req, res) => {
     try {
@@ -70,23 +72,56 @@ export const get_products = async (req, res) => {
 
 // update products details by admin
 export const updateProducts_details = async (req, res) => {
-    const productId = req.params.id
-    console.log("Product ID:", productId);
+    try {
+        const productId = req.params.id
+        const adminID = req.user._id;
+        const { name, price, description, countInStock } = req.body;
+        const update_details = {
+            name,
+            price,
+            description,
+            countInStock
+        }
+        const product = await products_model.findOneAndUpdate(
+            { _id: productId, createdBy: adminID },
+            update_details,
+            { new: true });
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
 
-    const adminID = req.user._id;
-    console.log("Admin from token:", adminID);
-    const { name, price, description, countInStock } = req.body;
-    const updating = {
-        name,
-        price,
-        description,
-        countInStock
+        console.log("Product in DB:", product);
+        res.json({
+            product,
+            message: "products details are updated"
+        })
+    } catch (err) {
+        console.log("error", err.message);
+        return res.status(500).json({
+            message: err.message
+        })
     }
 
-    const product = await products_model.findById(productId);
-    console.log("Product in DB:", product);
-    res.json({
-        product,
-        message: "products details are updated"
-    })
+}
+
+// DELETE PRODUCTS BY ADMIN ONLY
+export const delete_product = async (req, res) => {
+    try {
+        const adminId = req.user._id;
+        const productId = req.params.id;
+        const delete_details = await products_model.findOneAndDelete({ _id: productId, createdBy: adminId })
+        if (!delete_details) {
+            return res.status(404).json({
+                message: "products not found"
+            })
+        }
+        return res.status(200).json({
+            message: "products details are deleted successfully"
+        })
+    } catch (err) {
+        console.log("error", err.message);
+        return res.status(500).json({
+            message: err.message
+        })
+    }
 }
