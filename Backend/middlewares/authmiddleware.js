@@ -32,7 +32,7 @@ export const registerCheck = async (req, res, next) => {
     next();
   } catch (err) {
     console.log("error", err.message);
-    res.status(500).json({
+    res.status(401).json({
       message: err.message
     })
   }
@@ -52,6 +52,7 @@ export const protect = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log(decoded)
     const user = await user_model.findById(decoded.id).select("-Password");
 
     if (!user) {

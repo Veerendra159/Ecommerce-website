@@ -84,16 +84,16 @@ export const update_details = async (req, res) => {
 }
 
 // Delete register user 
-export const Delete_user = async (req,res)=>{
+export const Delete_user = async (req, res) => {
     const userId = req.user._id;
     const find_user = await user_model.findByIdAndDelete(userId)
-    if(!find_user){
+    if (!find_user) {
         return res.status(400).json({
             message: "user not found"
         })
     }
     return res.json({
-        message:"user deleted successfully"
+        message: "user deleted successfully"
     })
 
 }
